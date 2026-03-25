@@ -34,3 +34,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is firing on port ${PORT}`);
   console.log(`🔗 Local URL: http://localhost:${PORT}`);
 });
+
+module.exports = app;
