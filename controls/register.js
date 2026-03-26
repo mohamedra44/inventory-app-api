@@ -22,9 +22,18 @@ module.exports = async (req, res, next) => {
 
   await newUser.save();
 
+  const user = await User.findOne({ email });
+
+  const token = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" },
+  );
+
   res.status(201).json({
     success: true,
     message: "User registered successfully",
+    token: token,
     user: {
       id: newUser._id,
       email: newUser.email,
