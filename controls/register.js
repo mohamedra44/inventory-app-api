@@ -2,9 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
 module.exports = async (req, res, next) => {
-  const {name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -26,7 +25,12 @@ module.exports = async (req, res, next) => {
   await newUser.save();
 
   const token = jwt.sign(
-    { id: newUser._id, email: newUser.email, role: newUser.role },
+    {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+    },
     process.env.JWT_SECRET,
     { expiresIn: "1d" },
   );
