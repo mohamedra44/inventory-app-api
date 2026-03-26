@@ -2,11 +2,11 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
 module.exports = async (req, res, next) => {
-  const { username, password, role } = req.body;
+  const { email, password, role } = req.body;
 
-  const existingUser = await User.findOne({ username });
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
-    const error = new Error("This username is already taken");
+    const error = new Error("This email is already taken");
     error.status = 400;
     return next(error);
   }
@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const newUser = new User({
-    username,
+    email,
     password: hashedPassword,
     role: role || "employee",
   });
@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
     message: "User registered successfully",
     user: {
       id: newUser._id,
-      username: newUser.username,
+      email: newUser.email,
       role: newUser.role,
     },
   });
