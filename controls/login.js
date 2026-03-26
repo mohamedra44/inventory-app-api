@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 
 
 module.exports = async (req, res, next) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ message: "User not found" });
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -13,10 +13,10 @@ module.exports = async (req, res, next) => {
 
 
   const token = jwt.sign(
-    { id: user._id, username: user.username, role: user.role },
+    { id: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "1d" },
   );
 
-  res.json({ token, user: { username: user.username, role: user.role } });
+  res.json({ token, user: { email: user.email, role: user.role } });
 };
